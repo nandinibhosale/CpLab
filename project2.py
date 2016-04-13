@@ -11,6 +11,7 @@ from scipy.integrate import odeint,trapz
 import random
 from pylab import plot,show,subplot,figure
 
+"""PI Controller for cstr"""
 Fis=2.0
 Cais=2.0
 k0=0.2
@@ -30,6 +31,7 @@ Kc2=20000.0
 TTi1=0.1
 TTi2=0.001
 
+"""Steady state calculation"""
 def steady(x):
     h=x[0]
     Ca=x[1]
@@ -39,22 +41,27 @@ def steady(x):
     e2=Fi/A/h*(Cai-Ca)-k0*exp(-E/R/T)*Ca
     e3=Fi/A/h*(Ti-T)+J*k0*exp(-E/R/T)*Ca-Qc/p/Cp/A/h
     return [e1,e2,e3]
+    
+    
 y=[]
 z=[]
 v=[]
 
 
-
+"""Integration using Trapz"""
 def control(x,t):
     
     h=x[0]
     Ca=x[1]
     y.append(h-hs)
-    v.append(t)
-    Fc=F+Kc1*(h-hs)+Kc1/TTi1*trapz(y,v)
+    v.append(t)  
+    
+    Fc=F+   Kc1*(h-hs)+   Kc1/TTi1*trapz(y,v)
+  
     T=x[2]
     z.append(T-Ts)
-    Q=Qc+Kc2*(T-Ts)+Kc2/TTi2*trapz(z,v)
+    Q=Qc+    Kc2*(T-Ts)+    Kc2/TTi2*trapz(z,v)
+ 
     e1=(Fi-Fc)/A
     e2=Fi/A/h*(Cai-Ca)-k0*exp(-E/R/T)*Ca
     e3=Fi/A/h*(Ti-T)+J*k0*exp(-E/R/T)*Ca-Q/p/Cp/A/h
